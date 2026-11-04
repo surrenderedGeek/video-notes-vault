@@ -1,0 +1,31 @@
+{
+  "name": "video-notes-vault",
+  "version": "0.1.0",
+  "description": "The Markdown format Video Notes keeps timestamped video notes in, in a folder or an Obsidian vault, and the three-way merge that syncs them.",
+  "license": "MIT",
+  "author": "Anas Syed",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/surrenderedGeek/video-notes-vault.git"
+  },
+  "keywords": ["obsidian", "markdown", "video", "notes", "youtube", "sync", "three-way-merge"],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "docs"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.1"
+  }
+}
