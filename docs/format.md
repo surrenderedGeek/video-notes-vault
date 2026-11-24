@@ -59,7 +59,7 @@ These are the fields the format manages. Any other field, like `rating` above, i
 | `title` | The video's title, in double quotes. Without one, the title is the `videoId`. |
 | `date` | The day the video was added, in local time (`2026-09-13`), for Obsidian to show as a date. Written only when `created` is known. A note with `date` but no `created` is read as added at midnight that day. |
 | `source` | The video's page. |
-| `videoId` | The video's id: YouTube's 11 characters, or `course/lesson` for a LinkedIn Learning lesson. **A note without a `videoId` isn't a video's note**, and is left alone. |
+| `videoId` | The video's id: YouTube's 11 characters, `course/lesson` for a LinkedIn Learning lesson, or `skool:group:course:lesson` for a Skool lesson. **A note without a `videoId` isn't a video's note**, and is left alone. |
 | `channel` | Who made it, in double quotes. |
 | `status` | `to-watch`, `in-progress` or `done`. Always written. A note without one is `in-progress` if it has notes, else `to-watch`. Any other value is replaced. |
 | `tags` | A YAML list, following Obsidian's tag rules: lower case, no spaces (they become `-`), `/` for nesting, and at least one letter or `_`. An inline list (`[a, b]`) is read too. No `tags` field means no tags. |
@@ -74,7 +74,7 @@ How the fields are read:
 
 - **Quoting.** Values are read double-quoted (with `\"` and `\\` escapes), single-quoted, or plain. They're written double-quoted where they're free text.
 - **`playlist` and `part`** count only when `playlist` is a single value on its own line and `part` is a whole number from 1. Anything else, like a list of links, is the user's own and is kept as written.
-- **`platform`** isn't written. It's told from `source`, and failing that from the `videoId`: one with a slash is LinkedIn Learning's. A `platform` field that's there is kept as written.
+- **`platform`** isn't written. It's told from `source`, and failing that from the `videoId`: one starting `skool:` is Skool's, and one with a slash is LinkedIn Learning's. A `platform` field that's there is kept as written.
 - **Where a video was left** is the newest of every copy's `watched`. A `resume` with no `watched` counts as older than any other.
 
 ### Sections
@@ -120,7 +120,7 @@ Each note is a list item that starts with its moment, linked to that moment in t
 
 ## A course's note
 
-A course is a YouTube playlist, or a LinkedIn Learning course. It has a note of its own beside its lessons' notes:
+A course is a YouTube playlist, a LinkedIn Learning course, or a Skool course. A Skool course's `playlistId` is `skool:group:course`. It has a note of its own beside its lessons' notes:
 
 ````markdown
 ---
@@ -178,7 +178,7 @@ videos: 2
 
 **Placement:**
 
-- **A video on its own** gets a folder of its own: `Title/Title.md`. If that's taken, `Title (id)/Title (id).md`. A LinkedIn Learning id's slash becomes `-`.
+- **A video on its own** gets a folder of its own: `Title/Title.md`. If that's taken, `Title (id)/Title (id).md`. A LinkedIn Learning id's slash, and a Skool id's colons, become `-`.
 - **A course** gets a folder holding its note, `Course/Course.md`. If that's taken, `Course (playlistId)/Course (playlistId).md`.
 - **A lesson** goes in its course's folder, named after its title without the course's name (`lessonTitle`). If that's taken, ` (id)` is added.
 - **A note the user moved elsewhere** stays where they put it.

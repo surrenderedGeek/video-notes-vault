@@ -1,6 +1,6 @@
 {
   "name": "video-notes-vault",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The Markdown format Video Notes keeps timestamped video notes in, in a folder or an Obsidian vault, and the three-way merge that syncs them.",
   "license": "MIT",
   "author": "Anas Syed",

@@ -198,7 +198,7 @@ export function tagsFrom({ fields, lists }: Frontmatter): string[] {
 
 /** A platform this app knows, as front matter names one. */
 function knownPlatform(value: string | undefined): Platform | undefined {
-  return value === 'youtube' || value === 'udemy' || value === 'linkedin-learning' ? value : undefined
+  return value === 'youtube' || value === 'udemy' || value === 'linkedin-learning' || value === 'skool' ? value : undefined
 }
 
 export function metaFrom(frontmatter: Frontmatter): VideoMeta | null {

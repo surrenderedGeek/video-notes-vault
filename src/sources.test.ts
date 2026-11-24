@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { courseUrl, lessonParts, momentUrl, parseVideoLink, platformOf, sourceUrl } from './sources.js'
+import { courseUrl, lessonParts, momentUrl, parseVideoLink, platformOf, skoolParts, sourceUrl } from './sources.js'
 
 const LESSON = 'https://www.linkedin.com/learning/react-essential-training/using-hooks'
 
@@ -54,5 +54,40 @@ describe('telling the platforms apart', () => {
     expect(courseUrl('youtube', 'PLabc')).toBe('https://www.youtube.com/playlist?list=PLabc')
     expect(lessonParts('react-essential-training/using-hooks')).toEqual({ course: 'react-essential-training', lesson: 'using-hooks' })
     expect(lessonParts('dQw4w9WgXcQ')).toBeNull()
+  })
+})
+
+const SKOOL_LESSON = 'https://www.skool.com/muslimfilmmakers/classroom/1e816385?md=ca63f60a0e5c44d7868c0ae0f681942d'
+const SKOOL_ID = 'skool:muslimfilmmakers:1e816385:ca63f60a0e5c44d7868c0ae0f681942d'
+
+describe('Skool', () => {
+  it('reads a lesson link as the lesson in its course, and a classroom link without one as the course', () => {
+    expect(parseVideoLink(SKOOL_LESSON)).toEqual({ platform: 'skool', videoId: SKOOL_ID, listId: 'skool:muslimfilmmakers:1e816385' })
+    expect(parseVideoLink('skool.com/muslimfilmmakers/classroom/1e816385')).toEqual({
+      platform: 'skool',
+      videoId: null,
+      listId: 'skool:muslimfilmmakers:1e816385',
+    })
+  })
+
+  it("leaves Skool's other pages alone", () => {
+    expect(parseVideoLink('https://www.skool.com/muslimfilmmakers/classroom')).toBeNull()
+    expect(parseVideoLink('https://www.skool.com/muslimfilmmakers/about')).toBeNull()
+    expect(parseVideoLink('https://www.skool.com/discovery')).toBeNull()
+  })
+
+  it('tells a Skool lesson by its address or its id, never as LinkedIn Learning', () => {
+    expect(platformOf({ videoId: SKOOL_ID })).toBe('skool')
+    expect(platformOf({ videoId: 'x', url: SKOOL_LESSON })).toBe('skool')
+    expect(SKOOL_ID).not.toContain('/')
+  })
+
+  it('rebuilds the lesson, course and moment addresses from the id', () => {
+    expect(sourceUrl({ videoId: SKOOL_ID })).toBe(SKOOL_LESSON)
+    expect(courseUrl('skool', 'skool:muslimfilmmakers:1e816385')).toBe('https://www.skool.com/muslimfilmmakers/classroom/1e816385')
+    expect(momentUrl({ videoId: SKOOL_ID }, 90.7)).toBe(`${SKOOL_LESSON}&t=90`)
+    expect(skoolParts(SKOOL_ID)).toEqual({ group: 'muslimfilmmakers', course: '1e816385', lesson: 'ca63f60a0e5c44d7868c0ae0f681942d' })
+    expect(skoolParts('skool:muslimfilmmakers:1e816385')).toEqual({ group: 'muslimfilmmakers', course: '1e816385' })
+    expect(skoolParts('dQw4w9WgXcQ')).toBeNull()
   })
 })

@@ -69,7 +69,7 @@ const result = mergeNotes(agreed, mine.map(syncedNote), theirs.map(syncedNote), 
 | `layout.ts` | Where notes and screenshots go: `notePaths`, `courseNotePaths`, `screenshotPath` |
 | `fileName.ts` | Safe file names: `videoFileName`, and `lessonTitle` for a lesson in its course's folder |
 | `noteIds.ts` | Block ids (`^k3f9qa`) that keep a note the same note through edits |
-| `sources.ts`, `youtube.ts` | Links to videos and moments on YouTube and LinkedIn Learning |
+| `sources.ts`, `youtube.ts` | Links to videos and moments on YouTube, LinkedIn Learning and Skool |
 | `status.ts`, `tags.ts`, `resume.ts` | A video's status, its tags, and where it was left |
 
 Everything is exported from the package's root.
