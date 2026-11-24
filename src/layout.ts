@@ -46,12 +46,19 @@ export interface NotePlace {
  * taken by another video's.
  */
 export function notePaths(meta: Pick<VideoMeta, 'videoId' | 'title'>, place: NotePlace = {}): [string, string] {
-  // A LinkedIn Learning video's id is its course and lesson, with a slash between.
-  const id = meta.videoId.replace(/[/\\]/g, '-')
+  const id = idInPath(meta.videoId)
   const base = videoFileName(place.lesson ?? meta.title, id)
   if (place.course === undefined) return [`${base}/${base}.md`, `${base} (${id})/${base} (${id}).md`]
   const at = place.course ? `${place.course}/` : ''
   return [`${at}${base}.md`, `${at}${base} (${id}).md`]
+}
+
+/**
+ * An id as a file name takes it: a LinkedIn Learning id's slash, and a Skool id's colons, which
+ * Finder and Windows won't have in a name, become `-`.
+ */
+function idInPath(id: string): string {
+  return id.replace(/[/\\:]/g, '-')
 }
 
 /** A course's name as its folder's, and its note's. */
@@ -65,8 +72,9 @@ export function courseFolderName(title: string, listId: string): string {
  * course, holding a note of the same name; then the same with its playlist id too.
  */
 export function courseNotePaths(title: string, listId: string): [string, string] {
-  const base = courseFolderName(title, listId)
-  return [`${base}/${base}.md`, `${base} (${listId})/${base} (${listId}).md`]
+  const id = idInPath(listId)
+  const base = courseFolderName(title, id)
+  return [`${base}/${base}.md`, `${base} (${id})/${base} (${id}).md`]
 }
 
 /** Only screenshots named this way, in the attachments folder, are read or written: nothing a path could lead elsewhere. */

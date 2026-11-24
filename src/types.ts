@@ -1,7 +1,7 @@
 /** Where you are with a video. */
 export type VideoStatus = 'to-watch' | 'in-progress' | 'done'
 
-export type Platform = 'youtube' | 'udemy' | 'linkedin-learning'
+export type Platform = 'youtube' | 'udemy' | 'linkedin-learning' | 'skool'
 
 export interface VideoMeta {
   videoId: string

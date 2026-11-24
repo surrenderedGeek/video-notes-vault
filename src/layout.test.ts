@@ -24,6 +24,13 @@ describe('notePaths', () => {
   })
 })
 
+describe('Skool ids in paths', () => {
+  it("keeps a Skool id's colons out of the path, for a lesson and its course", () => {
+    expect(notePaths({ videoId: 'skool:group:abc:def', title: 'Intro' })[1]).toBe('Intro (skool-group-abc-def)/Intro (skool-group-abc-def).md')
+    expect(courseNotePaths('Module 2', 'skool:group:abc')[1]).toBe('Module 2 (skool-group-abc)/Module 2 (skool-group-abc).md')
+  })
+})
+
 describe("a course's note", () => {
   it('lives in a folder of the same name', () => {
     expect(courseNotePaths('Arabic Grammar in 40 Lessons', 'PLabc')).toEqual([

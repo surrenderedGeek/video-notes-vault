@@ -258,3 +258,27 @@ describe("a LinkedIn Learning course's note", () => {
     })
   })
 })
+
+describe("a Skool course's note", () => {
+  const listId = 'skool:muslimfilmmakers:1e816385'
+  const lesson = `${listId}:ca63f60a0e5c44d7868c0ae0f681942d`
+  const course: CourseContent = {
+    listId,
+    platform: 'skool',
+    title: 'Module 2 - Story script & Vision',
+    lessons: [{ videoId: lesson, title: 'Islamic Storytelling' }],
+  }
+
+  it('links each lesson to its page on Skool, and is found and read back by its id', () => {
+    const text = renderCourseNote(course)
+
+    expect(text).toContain(`playlistId: ${listId}\nsource: https://www.skool.com/muslimfilmmakers/classroom/1e816385\n`)
+    expect(text).toContain('1. [Islamic Storytelling](https://www.skool.com/muslimfilmmakers/classroom/1e816385?md=ca63f60a0e5c44d7868c0ae0f681942d)')
+    expect(courseIdIn(text)).toBe(listId)
+    expect(readCourseList(text)).toMatchObject({ listId, platform: 'skool', lessons: [{ videoId: lesson, title: 'Islamic Storytelling' }] })
+  })
+
+  it("isn't taken for a course by a lesson's id", () => {
+    expect(courseIdIn(`---\nplaylistId: ${lesson}\n---\n`)).toBeNull()
+  })
+})

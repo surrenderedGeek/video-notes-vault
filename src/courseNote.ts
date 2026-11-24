@@ -1,5 +1,5 @@
 import { quote, readFrontmatter, splitFrontmatter } from './markdown.js'
-import { courseUrl, parseVideoLink, sourceUrl } from './sources.js'
+import { courseUrl, parseVideoLink, skoolParts, sourceUrl } from './sources.js'
 import type { Platform } from './types.js'
 import { watchUrl } from './youtube.js'
 
@@ -77,7 +77,10 @@ export function courseIdIn(text: string): string | null {
   if (!split) return null
   const { fields } = readFrontmatter(split.frontmatter, TELLING_FIELDS)
   if (fields.videoId) return null
-  return /^[A-Za-z0-9_-]+$/.test(fields.playlistId ?? '') ? fields.playlistId : null
+  const id = fields.playlistId ?? ''
+  // A playlist's id, a LinkedIn Learning course's slug, or a Skool course's `skool:<group>:<course>`.
+  const skoolCourse = skoolParts(id)
+  return /^[A-Za-z0-9_-]+$/.test(id) || (skoolCourse && !skoolCourse.lesson) ? id : null
 }
 
 export function readCourseNote(text: string): CourseNoteRead | null {
@@ -143,7 +146,7 @@ function linkText(text: string): string {
  */
 function videoList({ listId, platform, lessons, partial }: CourseContent, kept: ReadonlyMap<number, string> = new Map()): string[] {
   if (lessons.length === 0) return ['_No videos yet._']
-  const onSite = (videoId: string) => (platform === 'linkedin-learning' ? sourceUrl({ videoId, platform }) : `${watchUrl(videoId)}&list=${listId}`)
+  const onSite = (videoId: string) => (platform && platform !== 'youtube' ? sourceUrl({ videoId, platform }) : `${watchUrl(videoId)}&list=${listId}`)
   const lines = lessons.map(({ videoId, title, note }, index) => {
     const link = note ? noteLink(note) : `[${linkText(title) || videoId}](${onSite(videoId)})`
     return `${index + 1}. ${link}${kept.get(index) ?? ''}`
